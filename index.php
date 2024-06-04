@@ -63,8 +63,21 @@ if (isset($_POST['submit'])) {
         <?php if (isset($_SESSION['user'])) { ?>
             <div class="row mt-4">
                 <div class="col-md-6">
-                    <h2>Bienvenido, <?php echo htmlspecialchars($_SESSION['user']); ?></h2>
-                    <button id="logout" class="btn btn-danger"><a href="logout">Cerrar sesión</a></button>
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <h2>Bienvenido, <?php echo htmlspecialchars($_SESSION['user']); ?></h2>
+                            <div>
+                                <?php if (isset($_GET['accion'])) {
+                                    if ($_GET['accion'] == 'entrada' || $_GET['accion'] == 'salida') { ?>
+                                        <a href="logout" class="btn btn-secondary">Cerrar sesión</a>
+                                    <?php }
+                                } else { ?>
+                                    <a href="entrada" class="btn btn-primary mr-2">Entrada</a>
+                                    <a href="salida" class="btn btn-danger mr-2">Salida</a>
+                                <?php } ?>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row mt-4">
