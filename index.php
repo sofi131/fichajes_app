@@ -37,6 +37,24 @@ if (isset($_SESSION['usuario_id']) && isset($_GET['accion'])) {
 $fichajesModel = new FichajesModel();
 $fichajes = $fichajesModel->getLastFichajesOfToday(5);
 
+// Array para almacenar los IDs de usuario
+$userIds = [];
+
+// Obtener los IDs de usuario de los últimos fichajes
+foreach ($fichajes as $fichaje) {
+    $userIds[] = $fichaje['usuario_id'];
+}
+
+// Consulta para obtener los nombres de los usuarios correspondientes a los IDs
+$usersModel = new UsersModel();
+$usuarios = $usersModel->getUsersByIds($userIds);
+
+// Mapear los IDs de usuario a los nombres de usuario
+$userIdToName = [];
+foreach ($usuarios as $usuario) {
+    $userIdToName[$usuario['id']] = $usuario['nombre'];
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -88,15 +106,15 @@ $fichajes = $fichajesModel->getLastFichajesOfToday(5);
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Usuario ID</th>
+                            <th>Nombre</th>
                             <th>Fecha</th>
                             <th>Tipo</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($fichajes as $fichaje) { ?>
+                        <?php foreach ($fichajes as  $fichaje) { ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($fichaje['usuario_id']); ?></td>
+                                <td><?php echo htmlspecialchars($userIdToName[$fichaje['usuario_id']]); ?></td>
                                 <td><?php echo htmlspecialchars($fichaje['fecha']); ?></td>
                                 <td><?php echo htmlspecialchars($fichaje['tipo']); ?></td>
                             </tr>
@@ -111,3 +129,4 @@ $fichajes = $fichajesModel->getLastFichajesOfToday(5);
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+
