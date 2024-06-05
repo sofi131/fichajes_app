@@ -111,7 +111,7 @@ $userIdToName = array_column($usuarios, 'nombre', 'id');
     </div>
 
     <!-- Contenedor principal -->
-    <div class="container mt-7 main-container">
+    <div class="container mt-5 main-container">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <?php if (isset($_SESSION['user'])) { ?>
