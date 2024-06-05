@@ -25,9 +25,18 @@ if (isset($_POST['submit'])) {
 // Manejar acciones si el usuario está autenticado
 if (isset($_SESSION['usuario_id']) && isset($_GET['accion'])) {
     $fichajesModel = new FichajesModel();
-    $fichajesModel->registrarFichaje($_SESSION['usuario_id'], $_GET['accion']);
-    header('Location: index.php'); // Redirigir para evitar múltiples envíos
-    exit;
+
+    // Verificar si el usuario ya tiene un registro para el día actual
+    $registroHoy = $fichajesModel->getFichajeHoy($_SESSION['usuario_id']);
+
+    if ($registroHoy) {
+        $registro_error = "¡Ya te has registrado hoy!";
+    } else {
+        // Si no hay registro para hoy, registrar la entrada o salida según la acción
+        $fichajesModel->registrarFichaje($_SESSION['usuario_id'], $_GET['accion']);
+        header('Location: index.php'); // Redirigir para evitar múltiples envíos
+        exit;
+    }
 }
 
 // Obtener los últimos 5 fichajes del día actual
@@ -87,7 +96,6 @@ $userIdToName = array_column($usuarios, 'nombre', 'id');
             /* Margen inferior añadido */
         }
 
-
         /* Estilos para el contenedor principal */
         .main-container {
             margin-top: 90px;
@@ -130,24 +138,28 @@ $userIdToName = array_column($usuarios, 'nombre', 'id');
         </div>
         <div class="row justify-content-center">
             <div class="col-md-6 form-container mb-4">
-                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                    <div class="form-group mt-3">
-                        <label for="dni">DNI:</label>
-                        <input type="text" class="form-control" id="dni" name="dni" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Contraseña:</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                    </div>
-                    <button type="submit" name="submit" class="btn btn-primary btn-block">Validar</button>
-                </form>
-                <?php if (isset($login_error)) { ?>
-                    <p class="text-danger mt-3"><?php echo $login_error; ?></p>
+                <?php if (isset($registro_error)) { ?>
+                    <p class="text-danger mt-3 text-center"><?php echo $registro_error; ?></p>
+                <?php } else { ?>
+                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                        <div class="form-group mt-3">
+                            <label for="dni">DNI:</label>
+                            <input type="text" class="form-control" id="dni" name="dni" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Contraseña:</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <button type="submit" name="submit" class="btn btn-primary btn-block">Validar</button>
+                    </form>
+                    <?php if (isset($login_error)) { ?>
+                        <p class="text-danger mt-3 text-center"><?php echo $login_error; ?></p>
+                    <?php } ?>
                 <?php } ?>
             </div>
         </div>
         <div class="row justify-content-center table-container">
-            <div class="col-md-12">
+            <div class="col-md-12 ">
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
@@ -168,9 +180,17 @@ $userIdToName = array_column($usuarios, 'nombre', 'id');
                 </table>
             </div>
         </div>
+        <?php if (isset($_SESSION['user']) && isset($_GET['accion']) && ($registro_error || !$registroHoy)) { ?>
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center">
+                    <a href="logout.php" class="btn btn-secondary">Cerrar sesión</a>
+                </div>
+            </div>
+        <?php } ?>
     </div>
     </div>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>
+

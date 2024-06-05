@@ -58,6 +58,21 @@ class FichajesModel
         $fichajes = $stmt->fetchAll();
         return $fichajes;
     }
+
+    public function getFichajeHoy($usuario_id) {
+        // Obtener la fecha actual
+        $fecha_actual = date('Y-m-d');
+
+        // Consultar la base de datos para obtener el fichaje del usuario para la fecha actual
+        $query = "SELECT * FROM fichajes WHERE usuario_id = :usuario_id AND DATE(fecha) = :fecha_actual";
+        $statement = $this->db->prepare($query);
+        $statement->bindParam(':usuario_id', $usuario_id);
+        $statement->bindParam(':fecha_actual', $fecha_actual);
+        $statement->execute();
+        $fichaje = $statement->fetch(PDO::FETCH_ASSOC);
+
+        return $fichaje;
+    }
     
 }
 ?>
