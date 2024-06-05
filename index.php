@@ -71,12 +71,12 @@ foreach ($usuarios as $usuario) {
 
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4 text-center">Fichajes</h1>
+        <h1 class="mb-4">Fichajes</h1>
         <div class="row mt-4">
             <div class="col-md-6 offset-md-3 text-center">
                 <?php if (isset($_SESSION['user'])) { ?>
                     <h2>Bienvenido, <?php echo htmlspecialchars($_SESSION['user']); ?></h2>
-                    <div>
+                    <div class="mt-3">
                         <?php if (!isset($_GET['accion']) || ($_GET['accion'] != 'entrada' && $_GET['accion'] != 'salida')) { ?>
                             <a href="?accion=entrada" class="btn btn-primary mr-2">Entrada</a>
                             <a href="?accion=salida" class="btn btn-danger mr-2">Salida</a>
@@ -87,27 +87,25 @@ foreach ($usuarios as $usuario) {
             </div>
         </div>
         <div class="row mt-4">
-            <div class="col-md-12 text-center">
-                <div class="d-flex justify-content-center">
-                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                        <div class="form-group">
-                            <label for="dni">DNI:</label>
-                            <input type="text" class="form-control" id="dni" name="dni" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Contraseña:</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
-                        </div>
-                        <button type="submit" name="submit" class="btn btn-primary">Validar</button>
-                    </form>
-                </div>
+            <div class="col-md-12">
+                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                    <div class="form-group">
+                        <label for="dni">DNI:</label>
+                        <input type="text" class="form-control" id="dni" name="dni" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Contraseña:</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <button type="submit" name="submit" class="btn btn-primary">Validar</button>
+                </form>
                 <?php if (isset($login_error)) { ?>
                     <p class="text-danger"><?php echo $login_error; ?></p>
                 <?php } ?>
             </div>
         </div>
         <div class="row mt-4">
-            <div class="col-md-12 text-center">
+            <div class="col-md-12">
                 <div class="d-flex justify-content-center">
                     <table class="table table-striped table-hover">
                         <thead>
