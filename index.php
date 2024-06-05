@@ -90,8 +90,16 @@ $userIdToName = array_column($usuarios, 'nombre', 'id');
 
         /* Estilos para el contenedor principal */
         .main-container {
-            margin-top: 60px;
+            margin-top: 90px;
             /* Ajuste de margen para evitar que el encabezado fijo oculte contenido */
+            border: 1px solid #ced4da;
+            /* Borde alrededor del contenedor principal */
+            border-radius: 10px;
+            /* Radio de borde para esquinas redondeadas */
+            padding: 20px;
+            /* Espaciado interno */
+            background-color: #f8f9fa;
+            /* Color de fondo */
         }
     </style>
 </head>
@@ -103,7 +111,7 @@ $userIdToName = array_column($usuarios, 'nombre', 'id');
     </div>
 
     <!-- Contenedor principal -->
-    <div class="container mt-5 main-container">
+    <div class="container mt-7 main-container">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <?php if (isset($_SESSION['user'])) { ?>
