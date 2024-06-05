@@ -16,7 +16,8 @@ if (isset($_POST['submit'])) {
     $user = $usersModel->getUsuarioByDni($dni, $password);
 
     if ($user) {
-        // Si el usuario existe, iniciar sesión y mostrar su nombre
+        // Si el usuario existe, iniciar sesión y guardar su ID y nombre
+        $_SESSION['usuario_id'] = $user['id'];
         $_SESSION['user'] = $user['nombre'];
         session_regenerate_id(); // Regenerar ID de sesión al iniciar sesión
     } else {
@@ -25,12 +26,16 @@ if (isset($_POST['submit'])) {
     }
 }
 
+if (isset($_SESSION['usuario_id']) && isset($_GET['accion'])) {
+    $fichajesModel = new FichajesModel();
+    $fichajesModel->registrarFichaje($_SESSION['usuario_id'], $_GET['accion']);
+    header('Location: index.php'); // Redirigir para evitar múltiples envíos
+    exit;
+}
 ?>
-
 
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,7 +43,6 @@ if (isset($_POST['submit'])) {
     <!-- Enlace al archivo CSS de Bootstrap -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
-
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">Fichajes</h1>
@@ -63,20 +67,13 @@ if (isset($_POST['submit'])) {
         <?php if (isset($_SESSION['user'])) { ?>
             <div class="row mt-4">
                 <div class="col-md-6">
-                    <div class="row mt-4">
-                        <div class="col-md-6">
-                            <h2>Bienvenido, <?php echo htmlspecialchars($_SESSION['user']); ?></h2>
-                            <div>
-                                <?php if (isset($_GET['accion'])) {
-                                    if ($_GET['accion'] == 'entrada' || $_GET['accion'] == 'salida') { ?>
-                                        <a href="logout" class="btn btn-secondary">Cerrar sesión</a>
-                                    <?php }
-                                } else { ?>
-                                    <a href="entrada" class="btn btn-primary mr-2">Entrada</a>
-                                    <a href="salida" class="btn btn-danger mr-2">Salida</a>
-                                <?php } ?>
-                            </div>
-                        </div>
+                    <h2>Bienvenido, <?php echo htmlspecialchars($_SESSION['user']); ?></h2>
+                    <div>
+                        <?php if (!isset($_GET['accion']) || ($_GET['accion'] != 'entrada' && $_GET['accion'] != 'salida')) { ?>
+                            <a href="?accion=entrada" class="btn btn-primary mr-2">Entrada</a>
+                            <a href="?accion=salida" class="btn btn-danger mr-2">Salida</a>
+                            <a href="logout.php" class="btn btn-secondary">Cerrar sesión</a>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
@@ -85,18 +82,20 @@ if (isset($_POST['submit'])) {
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Nombre</th>
-                                <th>Hora de fichaje</th>
+                                <th>Usuario ID</th>
+                                <th>Fecha</th>
+                                <th>Tipo</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
                             $fichajesModel = new FichajesModel(); // Solo pasamos la conexión
-                            $fichajes = $fichajesModel->getFichajesByUser($_SESSION['user']);
+                            $fichajes = $fichajesModel->getFichajesByUser($_SESSION['usuario_id']);
                             foreach ($fichajes as $fichaje) { ?>
                                 <tr>
-                                    <td><?php echo htmlspecialchars($fichaje['name']); ?></td>
-                                    <td><?php echo date('H:i', $fichaje['fichada_at']); ?></td>
+                                    <td><?php echo htmlspecialchars($fichaje['usuario_id']); ?></td>
+                                    <td><?php echo htmlspecialchars($fichaje['fecha']); ?></td>
+                                    <td><?php echo htmlspecialchars($fichaje['tipo']); ?></td>
                                 </tr>
                             <?php } ?>
                         </tbody>
@@ -109,5 +108,4 @@ if (isset($_POST['submit'])) {
     <!-- Enlace al archivo JS de Bootstrap -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-
 </html>

@@ -5,27 +5,26 @@ class FichajesModel
 
     public function __construct()
     {
-         // Establecer los valores predeterminados
-         $dsn = 'mysql:host=localhost;dbname=fichajes_app';
-         $username = 'root';
-         $password = '1234';
+        // Establecer los valores predeterminados
+        $dsn = 'mysql:host=localhost;dbname=fichajes_app';
+        $username = 'root';
+        $password = '1234';
         $this->db = new PDO($dsn, $username, $password);
         $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
     public function getFichajesByDate($date)
     {
-        $stmt = $this->db->prepare("SELECT * FROM fichajes WHERE fecha = :date");
+        $stmt = $this->db->prepare("SELECT * FROM fichajes WHERE DATE(fecha) = :date");
         $stmt->execute([':date' => $date]);
         $fichajes = $stmt->fetchAll();
         return $fichajes;
     }
 
-    public function createFichaje($id,$tipo)
+    public function createFichaje($id, $tipo)
     {
-        $stmt = $this->db->prepare("INSERT INTO `fichajes_app`.`fichajes` (`usuario_id`, `tipo`) VALUES (:iduser, :tipo);
-        ");
-        $stmt->execute([':iduser' => $id, ':tipo'=>$tipo]);
+        $stmt = $this->db->prepare("INSERT INTO `fichajes_app`.`fichajes` (`usuario_id`, `tipo`) VALUES (:iduser, :tipo);");
+        $stmt->execute([':iduser' => $id, ':tipo' => $tipo]);
     }
 
     public function getFichajesByUser($user)
@@ -34,6 +33,19 @@ class FichajesModel
         $stmt->execute([':user' => $user]);
         $fichajes = $stmt->fetchAll();
         return $fichajes;
+    }
+
+    // Para registrar el fichaje
+    public function registrarFichaje($id, $tipo)
+    {
+        // Obtener la fecha y hora actual
+        $fecha_hora_actual = date('Y-m-d H:i:s');
+
+        // Preparar la consulta para insertar el fichaje
+        $stmt = $this->db->prepare("INSERT INTO fichajes (usuario_id, fecha, tipo) VALUES (:id, :fecha, :tipo)");
+
+        // Ejecutar la consulta con los valores proporcionados
+        $stmt->execute([':id' => $id, ':fecha' => $fecha_hora_actual, ':tipo' => $tipo]);
     }
 }
 ?>
