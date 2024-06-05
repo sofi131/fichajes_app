@@ -139,7 +139,7 @@ $userIdToName = array_column($usuarios, 'nombre', 'id');
             </div>
         </div>
         <div class="row justify-content-center table-container">
-            <div class="col-md-8">
+            <div class="col-md-12">
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
