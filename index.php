@@ -32,6 +32,11 @@ if (isset($_SESSION['usuario_id']) && isset($_GET['accion'])) {
     header('Location: index.php'); // Redirigir para evitar múltiples envíos
     exit;
 }
+
+// Obtener los 5 últimos fichajes del día actual
+$fichajesModel = new FichajesModel();
+$fichajes = $fichajesModel->getLastFichajesOfToday(5);
+
 ?>
 
 <!DOCTYPE html>
@@ -77,32 +82,29 @@ if (isset($_SESSION['usuario_id']) && isset($_GET['accion'])) {
                     </div>
                 </div>
             </div>
-            <div class="row mt-4">
-                <div class="col-md-12">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Usuario ID</th>
-                                <th>Fecha</th>
-                                <th>Tipo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $fichajesModel = new FichajesModel(); // Solo pasamos la conexión
-                            $fichajes = $fichajesModel->getFichajesByUser($_SESSION['usuario_id']);
-                            foreach ($fichajes as $fichaje) { ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($fichaje['usuario_id']); ?></td>
-                                    <td><?php echo htmlspecialchars($fichaje['fecha']); ?></td>
-                                    <td><?php echo htmlspecialchars($fichaje['tipo']); ?></td>
-                                </tr>
-                            <?php } ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
         <?php } ?>
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Usuario ID</th>
+                            <th>Fecha</th>
+                            <th>Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($fichajes as $fichaje) { ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($fichaje['usuario_id']); ?></td>
+                                <td><?php echo htmlspecialchars($fichaje['fecha']); ?></td>
+                                <td><?php echo htmlspecialchars($fichaje['tipo']); ?></td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
     <!-- Enlace al archivo JS de Bootstrap -->

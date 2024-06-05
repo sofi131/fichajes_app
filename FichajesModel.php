@@ -47,5 +47,17 @@ class FichajesModel
         // Ejecutar la consulta con los valores proporcionados
         $stmt->execute([':id' => $id, ':fecha' => $fecha_hora_actual, ':tipo' => $tipo]);
     }
+    //para obtener los útlimos 5 fichajes del día
+    public function getLastFichajesOfToday($limit)
+    {
+        $fecha_actual = date('Y-m-d');
+        $stmt = $this->db->prepare("SELECT * FROM fichajes WHERE DATE(fecha) = :fecha ORDER BY fecha DESC LIMIT :limit");
+        $stmt->bindValue(':fecha', $fecha_actual, PDO::PARAM_STR);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
+        $fichajes = $stmt->fetchAll();
+        return $fichajes;
+    }
+    
 }
 ?>
