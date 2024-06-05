@@ -57,6 +57,7 @@ foreach ($usuarios as $usuario) {
 
 ?>
 
+<!-- PARTE HTML-->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -68,28 +69,10 @@ foreach ($usuarios as $usuario) {
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="mb-4">Fichajes</h1>
-        <div class="row">
-            <div class="col-md-6">
-                <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
-                    <div class="form-group">
-                        <label for="dni">DNI:</label>
-                        <input type="text" class="form-control" id="dni" name="dni" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Contraseña:</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
-                    </div>
-                    <button type="submit" name="submit" class="btn btn-primary">Validar</button>
-                </form>
-                <?php if (isset($login_error)) { ?>
-                    <p class="text-danger"><?php echo $login_error; ?></p>
-                <?php } ?>
-            </div>
-        </div>
-        <?php if (isset($_SESSION['user'])) { ?>
-            <div class="row mt-4">
-                <div class="col-md-6">
+        <h1 class="mb-4 text-center">Fichajes</h1>
+        <div class="row mt-4">
+            <div class="col-md-6 offset-md-3 text-center">
+                <?php if (isset($_SESSION['user'])) { ?>
                     <h2>Bienvenido, <?php echo htmlspecialchars($_SESSION['user']); ?></h2>
                     <div>
                         <?php if (!isset($_GET['accion']) || ($_GET['accion'] != 'entrada' && $_GET['accion'] != 'salida')) { ?>
@@ -98,29 +81,51 @@ foreach ($usuarios as $usuario) {
                             <a href="logout.php" class="btn btn-secondary">Cerrar sesión</a>
                         <?php } ?>
                     </div>
-                </div>
+                <?php } ?>
             </div>
-        <?php } ?>
+        </div>
         <div class="row mt-4">
-            <div class="col-md-12">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Fecha</th>
-                            <th>Tipo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($fichajes as  $fichaje) { ?>
+            <div class="col-md-12 text-center">
+                <div class="d-flex justify-content-center">
+                    <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+                        <div class="form-group">
+                            <label for="dni">DNI:</label>
+                            <input type="text" class="form-control" id="dni" name="dni" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Contraseña:</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <button type="submit" name="submit" class="btn btn-primary">Validar</button>
+                    </form>
+                </div>
+                <?php if (isset($login_error)) { ?>
+                    <p class="text-danger"><?php echo $login_error; ?></p>
+                <?php } ?>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-12 text-center">
+                <div class="d-flex justify-content-center">
+                    <table class="table">
+                        <thead>
                             <tr>
-                                <td><?php echo htmlspecialchars($userIdToName[$fichaje['usuario_id']]); ?></td>
-                                <td><?php echo htmlspecialchars($fichaje['fecha']); ?></td>
-                                <td><?php echo htmlspecialchars($fichaje['tipo']); ?></td>
+                                <th>Nombre</th>
+                                <th>Fecha</th>
+                                <th>Tipo</th>
                             </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($fichajes as $fichaje) { ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($userIdToName[$fichaje['usuario_id']]); ?></td>
+                                    <td><?php echo htmlspecialchars($fichaje['fecha']); ?></td>
+                                    <td><?php echo htmlspecialchars($fichaje['tipo']); ?></td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -129,4 +134,3 @@ foreach ($usuarios as $usuario) {
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
-
