@@ -11,7 +11,7 @@ if (isset($_POST['submit'])) {
 
     // Crear una instancia de UsersModel
     $usersModel = new UsersModel(); // Pasar solo la conexión
-    
+
     // Llamar al método getUsuarioByDni() en la instancia creada
     $user = $usersModel->getUsuarioByDni($dni, $password);
 
@@ -60,6 +60,7 @@ foreach ($usuarios as $usuario) {
 <!-- PARTE HTML-->
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -67,6 +68,7 @@ foreach ($usuarios as $usuario) {
     <!-- Enlace al archivo CSS de Bootstrap -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
     <div class="container mt-5">
         <h1 class="mb-4 text-center">Fichajes</h1>
@@ -107,7 +109,7 @@ foreach ($usuarios as $usuario) {
         <div class="row mt-4">
             <div class="col-md-12 text-center">
                 <div class="d-flex justify-content-center">
-                    <table class="table">
+                    <table class="table table-striped table-hover">
                         <thead>
                             <tr>
                                 <th>Nombre</th>
@@ -133,4 +135,5 @@ foreach ($usuarios as $usuario) {
     <!-- Enlace al archivo JS de Bootstrap -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>
